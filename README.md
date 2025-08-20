@@ -4,10 +4,12 @@ I know basic Python but the interest of this project is more about uv and also r
 
 Initial commands to start a project.
 
-```
+```bash
 uv init
 uv add requests
 uv run main.py
+
+uv run adk web # https://google.github.io/adk-docs/get-started/quickstart/
 ```
 
 Read more: https://docs.astral.sh/uv/getting-started/features/
