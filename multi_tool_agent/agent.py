@@ -6,24 +6,46 @@ def get_weather(city: str) -> dict:
     """Retrieves the current weather report for a specified city.
 
     Args:
-        city (str): The name of the city for which to retrieve the weather report.
+        city (str): The name of the city (e.g. "New York", "London", "Tokyo")
 
     Returns:
-        dict: status and result or error msg.
+        dict: A dictionary containing the weather information.
+              Includes a 'status' key ('success' or 'error')
+              If 'success', includes a 'report' key with weather details.
+              If 'error', includes an 'error_message' key.
     """
-    if city.lower() == "new york":
-        return {
-            "status": "success",
-            "report": (
-                "The weather in New York is sunny with a temperature of 25 degrees"
-                " Celsius (77 degrees Fahrenheit)."
-            ),
-        }
+    print(f"--- Tool: get_weather called for city: {city} ---") # Log tool execution
+    city_normalized = city.lower().replace(" ", "") # Basic normalization
+
+    # Mock weather data
+    mock_weather_db = {
+        "newyork": {"status": "success", "report": "The weather in New York is sunny with a temperature of 25°C."},
+        "london": {"status": "success", "report": "It's cloudy in London with a temperature of 15°C."},
+        "tokyo": {"status": "success", "report": "Tokyo is experiencing light rain and a temperature of 18°C."},
+    }
+
+    if city_normalized in mock_weather_db:
+        return mock_weather_db[city_normalized]
     else:
-        return {
-            "status": "error",
-            "error_message": f"Weather information for '{city}' is not available.",
-        }
+        return {"status": "error", "error_message": f"Sorry, I don't have weather information for '{city}'."}
+
+instruction = """
+You are a helpful weather assistant.
+When the user asks for the weather in a specific city,
+use the 'get_weather' tool to find the information.
+If the tool returns an error, inform the user politely.
+If the tool is successful, present the weather report clearly.
+"""
+
+weather_agent = Agent(
+    name="weather_agent_v1",
+    model="gemini-2.0-flash",
+    description="Provides weather information for specific cities.",
+    instruction=instruction,
+    tools=[get_weather]
+)
+
+# https://google.github.io/adk-docs/tutorials/agent-team/#step-1-your-first-agent-basic-weather-lookup
 
 
 def get_current_time(city: str) -> dict:
